@@ -14,7 +14,6 @@ namespace VirtualShop.Products.API.Context
         {
             // Categories
             mb.Entity<Category>()
-              .ToTable("categories")
               .HasKey(c => c.Id);
             
             mb.Entity<Category>()
@@ -24,7 +23,6 @@ namespace VirtualShop.Products.API.Context
             
             // Products
             mb.Entity<Product>()
-              .ToTable("products")
               .Property(c => c.Name)
               .HasMaxLength(100)
               .IsRequired();

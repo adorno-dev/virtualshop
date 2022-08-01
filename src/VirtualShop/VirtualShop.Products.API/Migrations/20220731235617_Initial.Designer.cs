@@ -33,7 +33,7 @@ namespace VirtualShop.Products.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("categories", (string)null);
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -83,7 +83,7 @@ namespace VirtualShop.Products.API.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("products", (string)null);
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("VirtualShop.Products.API.Models.Product", b =>
