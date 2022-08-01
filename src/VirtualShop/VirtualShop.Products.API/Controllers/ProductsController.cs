@@ -48,14 +48,11 @@ namespace VirtualShop.Products.API.Controllers
             return new CreatedAtRouteResult("GetProductById", new { id = productDTO.Id });
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult> UpdateProduct([FromBody] ProductDTO productDTO, int id)
+        [HttpPut]
+        public async Task<ActionResult> UpdateProduct([FromBody] ProductDTO productDTO)
         {
             if (productDTO is null)
                 return BadRequest("Invalid data.");
-            
-            if (!productDTO.Id.Equals(id))
-                return BadRequest("Id mismatch.");
             
             await service.UpdateProduct(productDTO);
 

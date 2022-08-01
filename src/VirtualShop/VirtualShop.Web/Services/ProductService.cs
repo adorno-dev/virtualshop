@@ -40,7 +40,7 @@ namespace VirtualShop.Web.Services
         {
             using var client = httpClientFactory.CreateClient("Products.API");
 
-            using (var response = await client.GetAsync(API_ENDPOINT + id))
+            using (var response = await client.GetAsync($"{API_ENDPOINT}/{id}"))
             {
                 if (response.IsSuccessStatusCode)
                 {
@@ -93,7 +93,7 @@ namespace VirtualShop.Web.Services
         public async Task<bool> DeleteProduct(int id)
         {
             using var client = httpClientFactory.CreateClient("Products.API");
-            using (var response = await client.DeleteAsync(API_ENDPOINT + id))
+            using (var response = await client.DeleteAsync($"{API_ENDPOINT}/{id}"))
                 return response.IsSuccessStatusCode;
         }
     }

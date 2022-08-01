@@ -21,6 +21,7 @@ namespace VirtualShop.Web.Models
         [Required]
         public string? ImageURL { get; set; }
 
+        [Display(Name = "Category")]
         public string? CategoryName { get; set; }
 
         [Display(Name = "Categories")]

@@ -49,5 +49,52 @@ namespace VirtualShop.Web.Controllers
             
             return View(product);
         }
+
+        [HttpGet("UpdateProduct")]
+        public async Task<IActionResult> UpdateProduct(int id)
+        {
+            ViewBag.CategoryId = new SelectList(await categoryService.GetAllCategories(), "Id", "Name");
+
+            var product = await productService.FindProductById(id);
+
+            return product is null ?
+                View("Error") :
+                View(product);
+        }
+
+        [HttpPost("UpdateProduct")]
+        public async Task<IActionResult> UpdateProduct(ProductViewModel product)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await productService.UpdateProduct(product);
+
+                if (response is not null)
+                    return RedirectToAction(nameof(Index));
+            }
+            else ViewBag.CategoryId = new SelectList(await categoryService.GetAllCategories(), "Id", "Name");
+            
+            return View(product);
+        }
+
+        [HttpGet("DeleteProduct")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var product = await productService.FindProductById(id);
+
+            return product is null ?
+                View("Error") :
+                View(product);
+        }
+
+        [HttpPost("DeleteProduct")]
+        public async Task<IActionResult> DeleteProductConfirmed(int id)
+        {
+            var product = await productService.DeleteProduct(id);
+
+            return !product ?
+                View("Error") :
+                RedirectToAction("Index");
+        }
     }
 }

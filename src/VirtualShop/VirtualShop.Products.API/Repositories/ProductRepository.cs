@@ -42,6 +42,7 @@ namespace VirtualShop.Products.API.Repositories
         {
             var product = await GetById(id);
             context.Products.Remove(product);
+            await context.SaveChangesAsync();
             return product;
         }
     }
