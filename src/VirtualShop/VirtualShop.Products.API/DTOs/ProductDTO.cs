@@ -27,6 +27,7 @@ namespace VirtualShop.Products.API.DTOs
         public string? ImageURL { get; set; }
         public string? CategoryName { get; set; }
 
+        public int CategoryId { get; set; }
         [JsonIgnore]
         public Category? Category { get; set; }
     }

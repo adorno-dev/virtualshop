@@ -1,11 +1,17 @@
+using VirtualShop.Web.Services;
+using VirtualShop.Web.Services.Contracts;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient("Product.API", c =>
+builder.Services.AddHttpClient("Products.API", c =>
 {
-    c.BaseAddress = new Uri(builder.Configuration.GetSection("ServiceUri:Product.API").Value);
+    c.BaseAddress = new Uri(builder.Configuration.GetSection("ServiceUri:Products.API").Value);
 });
+
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 

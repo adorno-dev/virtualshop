@@ -32,6 +32,7 @@ namespace VirtualShop.Products.API.Services
         public async Task AddProduct(ProductDTO productDTO)
         {
             var product = mapper.Map<Product>(productDTO);
+            product.Category = null;
             await repository.Create(product);
             productDTO.Id = product.Id;
         }
@@ -39,6 +40,7 @@ namespace VirtualShop.Products.API.Services
         public async Task UpdateProduct(ProductDTO productDTO)
         {
             var product = mapper.Map<Product>(productDTO);
+            product.Category = null;
             await repository.Update(product);
         }
 
