@@ -16,12 +16,12 @@ namespace VirtualShop.Products.API.Repositories
 
         public async Task<IEnumerable<Product>> GetAll()
         {
-            return await context.Products.AsNoTracking().ToListAsync();
+            return await context.Products.Include(c => c.Category).AsNoTracking().ToListAsync();
         }
 
         public async Task<Product> GetById(int id)
         {
-            return await context.Products.AsNoTracking().FirstAsync(w => w.Id.Equals(id));
+            return await context.Products.Include(c => c.Category).AsNoTracking().FirstAsync(w => w.Id.Equals(id));
         }
 
         public async Task<Product> Create(Product product)
