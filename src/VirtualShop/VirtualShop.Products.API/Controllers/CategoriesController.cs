@@ -1,11 +1,15 @@
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtualShop.Products.API.DTOs;
+using VirtualShop.Products.API.Roles;
 using VirtualShop.Products.API.Services.Contracts;
 
 namespace VirtualShop.Products.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService service;
@@ -74,6 +78,7 @@ namespace VirtualShop.Products.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = Role.Admin)]
         public async Task<ActionResult<CategoryDTO>> RemoveCategory(int id)
         {
             var category = await service.GetCategoryById(id);

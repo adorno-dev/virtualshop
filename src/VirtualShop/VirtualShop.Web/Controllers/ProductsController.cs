@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using VirtualShop.Web.Models;
+using VirtualShop.Web.Roles;
 using VirtualShop.Web.Services.Contracts;
 
 namespace VirtualShop.Web.Controllers
@@ -36,6 +38,7 @@ namespace VirtualShop.Web.Controllers
         }
 
         [HttpPost("CreateProduct")]
+        [Authorize]
         public async Task<IActionResult> CreateProduct(ProductViewModel product)
         {
             if (ModelState.IsValid)
@@ -63,6 +66,7 @@ namespace VirtualShop.Web.Controllers
         }
 
         [HttpPost("UpdateProduct")]
+        [Authorize]
         public async Task<IActionResult> UpdateProduct(ProductViewModel product)
         {
             if (ModelState.IsValid)
@@ -78,6 +82,7 @@ namespace VirtualShop.Web.Controllers
         }
 
         [HttpGet("DeleteProduct")]
+        [Authorize]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await productService.FindProductById(id);
@@ -88,6 +93,7 @@ namespace VirtualShop.Web.Controllers
         }
 
         [HttpPost("DeleteProduct")]
+        [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> DeleteProductConfirmed(int id)
         {
             var product = await productService.DeleteProduct(id);

@@ -1,7 +1,11 @@
+using System.Net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VirtualShop.IdentityServer.Configuration;
 using VirtualShop.IdentityServer.Data;
+using VirtualShop.IdentityServer.Extensions;
+using VirtualShop.IdentityServer.Models.SeedDatabase;
+using VirtualShop.IdentityServer.Models.SeedDatabase.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -30,6 +34,8 @@ builder.Services
        .AddAspNetIdentity<ApplicationUser>()
        .AddDeveloperSigningCredential();
 
+builder.Services.AddScoped<IDatabaseSeedInitializer, DatabaseIdentityServerInitializer>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,5 +56,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.SeedDatabaseIdentityServer();
 
 app.Run();

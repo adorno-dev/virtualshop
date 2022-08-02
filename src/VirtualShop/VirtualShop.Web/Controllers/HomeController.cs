@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using VirtualShop.Web.Models;
 
@@ -17,6 +19,15 @@ namespace VirtualShop.Web.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        public async Task<IActionResult> Login()
+        {
+            await HttpContext.GetTokenAsync("access_token");
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Logout() => SignOut("Cookies", "oidc");
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
