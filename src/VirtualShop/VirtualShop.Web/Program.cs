@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using VirtualShop.Web.Services;
@@ -55,6 +56,13 @@ builder.Services
             options.TokenValidationParameters.RoleClaimType = "role";
             options.Scope.Add("VirtualShop");
             options.SaveTokens = true;
+            // Development only!!!
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                var handler = new HttpClientHandler();
+                handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                options.BackchannelHttpHandler = handler;
+            }
        });
 
 var app = builder.Build();

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -61,6 +62,13 @@ builder.Services
        .AddJwtBearer("Bearer", options => {
             options.Authority = builder.Configuration.GetSection("VirtualShop.IdentityServer:ApplicationUrl").Value;
             options.TokenValidationParameters = new TokenValidationParameters { ValidateAudience = false };
+            // Development only!!!
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                var handler = new HttpClientHandler();
+                handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                options.BackchannelHttpHandler = handler;
+            }
        });
 
 builder.Services
