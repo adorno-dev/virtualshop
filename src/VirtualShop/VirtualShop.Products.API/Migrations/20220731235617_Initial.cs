@@ -36,7 +36,7 @@ namespace VirtualShop.Products.API.Migrations
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Price = table.Column<decimal>(type: "decimal(12,2)", precision: 12, scale: 2, nullable: false),
-                    Description = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                    Description = table.Column<string>(type: "varchar(800)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Stock = table.Column<long>(type: "bigint", nullable: false),
                     ImageURL = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)

@@ -29,7 +29,7 @@ namespace VirtualShop.Products.API.Context
 
             mb.Entity<Product>()
               .Property(c => c.Description)
-              .HasMaxLength(255)
+              .HasMaxLength(800)
               .IsRequired();
 
             mb.Entity<Product>()

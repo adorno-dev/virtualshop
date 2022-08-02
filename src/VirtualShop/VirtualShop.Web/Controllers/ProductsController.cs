@@ -9,6 +9,7 @@ using VirtualShop.Web.Services.Contracts;
 namespace VirtualShop.Web.Controllers
 {
     [Route("[controller]")]
+    [Authorize(Roles = Role.Admin)]
     public class ProductsController : Controller
     {
         private readonly IProductService productService;
@@ -46,7 +47,6 @@ namespace VirtualShop.Web.Controllers
         }
 
         [HttpPost("CreateProduct")]
-        [Authorize]
         public async Task<IActionResult> CreateProduct(ProductViewModel product)
         {
             if (ModelState.IsValid)
@@ -74,7 +74,6 @@ namespace VirtualShop.Web.Controllers
         }
 
         [HttpPost("UpdateProduct")]
-        [Authorize]
         public async Task<IActionResult> UpdateProduct(ProductViewModel product)
         {
             if (ModelState.IsValid)
@@ -90,7 +89,6 @@ namespace VirtualShop.Web.Controllers
         }
 
         [HttpGet("DeleteProduct")]
-        [Authorize]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await productService.FindProductById(id, await GetAccessToken());
@@ -101,7 +99,6 @@ namespace VirtualShop.Web.Controllers
         }
 
         [HttpPost("DeleteProduct")]
-        [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> DeleteProductConfirmed(int id)
         {
             var product = await productService.DeleteProduct(id, await GetAccessToken());

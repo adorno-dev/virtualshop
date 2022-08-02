@@ -59,8 +59,8 @@ namespace VirtualShop.Products.API.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(800)
+                        .HasColumnType("varchar(800)");
 
                     b.Property<string>("ImageURL")
                         .IsRequired()
