@@ -35,7 +35,8 @@ namespace VirtualShop.IdentityServer.Models.SeedDatabase
         {
             if (await userManager.FindByEmailAsync("admin@virtualshop.com") is null)
             {
-                var admin = new ApplicationUser() {
+                var admin = new ApplicationUser
+                {
                     NormalizedEmail = "ADMIN",
                     UserName = "admin",
                     Email = "admin@virtualshop.com",
@@ -47,7 +48,22 @@ namespace VirtualShop.IdentityServer.Models.SeedDatabase
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
 
-                var client = new ApplicationUser() {
+                if ((await userManager.CreateAsync(admin, "Change$2022")).Succeeded)
+                {
+                    await userManager.AddToRoleAsync(admin, IdentityConfiguration.Admin);
+                    await userManager.AddClaimsAsync(admin, new Claim[] {
+                        new Claim(JwtClaimTypes.Name, $"{admin.FirstName} {admin.LastName}"),
+                        new Claim(JwtClaimTypes.GivenName, admin.FirstName),
+                        new Claim(JwtClaimTypes.FamilyName, admin.LastName),
+                        new Claim(JwtClaimTypes.Role, IdentityConfiguration.Admin)
+                    });
+                }
+            }
+
+            if (await userManager.FindByEmailAsync("client@virtualshop.com") is null)
+            {
+                var client = new ApplicationUser
+                {
                     NormalizedEmail = "CLIENT",
                     UserName = "client",
                     Email = "client@virtualshop.com",
@@ -59,18 +75,7 @@ namespace VirtualShop.IdentityServer.Models.SeedDatabase
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
 
-                if ((await userManager.CreateAsync(admin, "Change@2022")).Succeeded)
-                {
-                    await userManager.AddToRoleAsync(admin, IdentityConfiguration.Admin);
-                    await userManager.AddClaimsAsync(admin, new Claim[] {
-                        new Claim(JwtClaimTypes.Name, $"{admin.FirstName} {admin.LastName}"),
-                        new Claim(JwtClaimTypes.GivenName, admin.FirstName),
-                        new Claim(JwtClaimTypes.FamilyName, admin.LastName),
-                        new Claim(JwtClaimTypes.Role, IdentityConfiguration.Admin)
-                    });
-                }
-
-                if ((await userManager.CreateAsync(client, "Change@2022")).Succeeded)
+                if ((await userManager.CreateAsync(client, "Change$2022")).Succeeded)
                 {
                     await userManager.AddToRoleAsync(client, IdentityConfiguration.Client);
                     await userManager.AddClaimsAsync(client, new Claim[] {

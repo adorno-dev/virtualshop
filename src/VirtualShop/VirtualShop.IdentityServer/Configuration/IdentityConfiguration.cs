@@ -1,5 +1,6 @@
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace VirtualShop.IdentityServer.Configuration
 {
@@ -39,8 +40,8 @@ namespace VirtualShop.IdentityServer.Configuration
                     ClientId = "VirtualShop",
                     ClientSecrets = { new Secret("abracadabra#simsalabim".Sha256())},
                     AllowedGrantTypes = GrantTypes.Code, //via codigo
-                    RedirectUris = {"https://localhost:7165/signin-oidc"},//login
-                    PostLogoutRedirectUris = {"https://localhost:7165/signout-callback-oidc"},//logout
+                    RedirectUris = {"https://localhost:7212/signin-oidc"},//login
+                    PostLogoutRedirectUris = {"https://localhost:7212/signout-callback-oidc"},//logout
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,

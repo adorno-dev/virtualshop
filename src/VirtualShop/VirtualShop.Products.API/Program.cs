@@ -18,24 +18,34 @@ builder.Services
        .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(o =>
+builder.Services.AddSwaggerGen(c =>
 {
-    o.SwaggerDoc("v1", new OpenApiInfo { Title = "VirtualShop.Products.API", Version = "v1" });
-    o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "VShop.ProductApi", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
+        Description = @"'Bearer' [space] seu token",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
-        Name = "Bearer",
-        Scheme = "oauth2",
-        BearerFormat = "JWT",
-        Description = @"JWT authorization header using the bearer scheme. Enter 'Bearer'[space] <token>'",
-        In = ParameterLocation.Header
+        Scheme = "Bearer"
     });
-    o.AddSecurityRequirement(new OpenApiSecurityRequirement
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-        {
-            new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
-            new string[] {}
-        }
+         {
+            new OpenApiSecurityScheme
+            {
+               Reference = new OpenApiReference
+               {
+                  Type = ReferenceType.SecurityScheme,
+                  Id = "Bearer"
+               },
+               Scheme = "oauth2",
+               Name = "Bearer",
+               In= ParameterLocation.Header
+            },
+            new List<string> ()
+         }
     });
 });
 

@@ -127,15 +127,11 @@ namespace IdentityServerHost.Quickstart.UI
 
             if (ModelState.IsValid)
             {
-                // validate username/password against in-memory store
-                // if (_users.ValidateCredentials(model.Username, model.Password))
-                // {
-                //     var user = _users.FindByUsername(model.Username);
                 var signIn = await signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: false);
 
                 if (signIn.Succeeded)
                 {
-                    var user = await userManager.FindByEmailAsync(model.Username);
+                    var user = await userManager.FindByNameAsync(model.Username);
 
                     await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.Client.ClientId));
 

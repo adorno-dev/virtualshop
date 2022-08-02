@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using VirtualShop.Web.Services;
 using VirtualShop.Web.Services.Contracts;
 
