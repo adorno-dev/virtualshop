@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using VirtualShop.Carts.API.Context;
+using VirtualShop.Carts.API.Repositories;
+using VirtualShop.Carts.API.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -43,6 +45,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 builder.Services.AddCors(options => 
     options.AddPolicy("CorsPolicy", builder => 
