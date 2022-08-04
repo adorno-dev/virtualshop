@@ -10,7 +10,7 @@ namespace VirtualShop.Carts.API.DTOs.Mappings
             CreateMap<CartDTO, Cart>().ReverseMap();
             CreateMap<CartHeaderDTO, CartHeader>().ReverseMap();
             CreateMap<CartItemDTO, CartItem>().ReverseMap();
-            CreateMap<ProductDTO, CartItem>().ReverseMap();
+            CreateMap<ProductDTO, Product>().ReverseMap();
         }
     }
 }

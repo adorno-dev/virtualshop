@@ -28,6 +28,7 @@ namespace VirtualShop.Web.Services
         public async Task<IEnumerable<ProductViewModel>?> GetAllProducts(string token)
         {
             using var client = httpClientFactory.CreateClient("Products.API");
+
             PutTokenInHeaderAuthorization(token, client);
 
             using (var response = await client.GetAsync(API_ENDPOINT))
@@ -46,6 +47,7 @@ namespace VirtualShop.Web.Services
         public async Task<ProductViewModel?> FindProductById(int id, string token)
         {
             using var client = httpClientFactory.CreateClient("Products.API");
+
             PutTokenInHeaderAuthorization(token, client);
 
             using (var response = await client.GetAsync($"{API_ENDPOINT}/{id}"))
@@ -64,9 +66,11 @@ namespace VirtualShop.Web.Services
         public async Task<ProductViewModel?> CreateProduct(ProductViewModel product, string token)
         {
             var jsonProduct = JsonSerializer.Serialize(product);
+
             var stringContent = new StringContent(jsonProduct, Encoding.UTF8, "application/json");
 
             using var client = httpClientFactory.CreateClient("Products.API");
+
             PutTokenInHeaderAuthorization(token, client);
 
             using (var response = await client.PostAsync(API_ENDPOINT, stringContent))
@@ -87,6 +91,7 @@ namespace VirtualShop.Web.Services
             var jsonProduct = JsonSerializer.Serialize(product);
 
             using var client = httpClientFactory.CreateClient("Products.API");
+
             PutTokenInHeaderAuthorization(token, client);
 
             using (var response = await client.PutAsJsonAsync(API_ENDPOINT, product))
@@ -105,6 +110,7 @@ namespace VirtualShop.Web.Services
         public async Task<bool> DeleteProduct(int id, string token)
         {
             using var client = httpClientFactory.CreateClient("Products.API");
+            
             PutTokenInHeaderAuthorization(token, client);
             
             using (var response = await client.DeleteAsync($"{API_ENDPOINT}/{id}"))

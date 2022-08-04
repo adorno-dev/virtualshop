@@ -11,11 +11,13 @@ namespace VirtualShop.Web.Controllers
     {
         private readonly ILogger<HomeController> logger;
         private readonly IProductService productService;
+        private readonly ICartService cartService;
 
-        public HomeController(ILogger<HomeController> logger, IProductService productService)
+        public HomeController(ILogger<HomeController> logger, IProductService productService, ICartService cartService)
         {
             this.logger = logger;
             this.productService = productService;
+            this.cartService = cartService;
         }
 
         public async Task<IActionResult> Index()
@@ -28,19 +30,54 @@ namespace VirtualShop.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<ProductViewModel>> ProductDetails(int id)
         {
-            var product = await productService.FindProductById(id, string.Empty);
+            var token = await HttpContext.GetTokenAsync("access_token");
+
+            if (token is null)
+                return BadRequest("Invalid token.");
+
+            var product = await productService.FindProductById(id, token);
 
             return product is null ?
                 View("Error") :
                 View(product);
         }
 
+        [HttpPost]
+        [ActionName("ProductDetails")]
+        [Authorize]
+        public async Task<ActionResult<ProductViewModel>> ProductDetailsPost(ProductViewModel productViewModel)
+        {
+            var token = await HttpContext.GetTokenAsync("access_token");
+
+            if (token is null)
+                return BadRequest("Invalid token.");
+
+            var cart = new CartViewModel { CartHeader = new () { UserId = User.Claims.First(w => w.Type.Equals("sub")).Value } };
+
+            var cartItem = new CartItemViewModel {
+                Product = await productService.FindProductById(productViewModel.Id, token),
+                ProductId = productViewModel.Id,
+                Quantity = productViewModel.Quantity
+            };
+
+            var cartItemsViewModel = new List<CartItemViewModel>();
+            cartItemsViewModel.Add(cartItem);
+            cart.CartItems = cartItemsViewModel;
+
+            var cartViewModel = await cartService.AddItemToCartAsync(cart, token);
+
+            return cartViewModel is null ?
+                View(cartViewModel):
+                RedirectToAction(nameof(Index));
+        }
+
         [Authorize]
         public async Task<IActionResult> Login()
         {
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var token = await HttpContext.GetTokenAsync("access_token");
             return RedirectToAction(nameof(Index));
         }
 

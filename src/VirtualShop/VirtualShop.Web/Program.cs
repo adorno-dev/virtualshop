@@ -8,10 +8,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient("Products.API", c =>
-{
+
+builder.Services.AddHttpClient<IProductService, ProductService>("Products.API", c => {
     c.BaseAddress = new Uri(builder.Configuration.GetSection("ServiceUri:Products.API").Value);
 })
+// Bypass SSL validation on Linux (Development only!)
+.ConfigurePrimaryHttpMessageHandler(() => {
+    var handler = new HttpClientHandler();
+    if (builder.Environment.IsDevelopment())
+        handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+    return handler;
+});
+
+builder.Services.AddHttpClient<ICartService, CartService>("Carts.API", c => {
+    c.BaseAddress = new Uri(builder.Configuration.GetSection("ServiceUri:Carts.API").Value);
+})
+// Bypass SSL validation on Linux (Development only!)
 .ConfigurePrimaryHttpMessageHandler(() => {
     var handler = new HttpClientHandler();
     if (builder.Environment.IsDevelopment())
@@ -21,6 +33,7 @@ builder.Services.AddHttpClient("Products.API", c =>
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services
        .AddAuthentication(options => {
@@ -83,8 +96,5 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 app.Run();
