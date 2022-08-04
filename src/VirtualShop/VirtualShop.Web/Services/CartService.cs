@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using VirtualShop.Web.Models;
@@ -19,11 +18,9 @@ namespace VirtualShop.Web.Services
             jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
-        public async Task<CartViewModel?> GetCartByUserIdAsync(string userId, string token)
+        public async Task<CartViewModel?> GetCartByUserIdAsync(string userId)
         {
             var client = httpClientFactory.CreateClient("Carts.API");
-            
-            PutTokenInHeaderAuthorization(token, client);
 
             using (var response = await client.GetAsync($"{API_ENDPOINT}/GetCart/{userId}"))
             {
@@ -38,11 +35,9 @@ namespace VirtualShop.Web.Services
             return cartViewModel;
         }
 
-        public async Task<CartViewModel?> AddItemToCartAsync(CartViewModel cartViewModel, string token)
+        public async Task<CartViewModel?> AddItemToCartAsync(CartViewModel cartViewModel)
         {
             var client = httpClientFactory.CreateClient("Carts.API");
-
-            PutTokenInHeaderAuthorization(token, client);
 
             var stringContent = new StringContent(JsonSerializer.Serialize(cartViewModel), Encoding.UTF8, "application/json");
 
@@ -59,11 +54,9 @@ namespace VirtualShop.Web.Services
             return this.cartViewModel;
         }
 
-        public async Task<CartViewModel?> UpdateCartAsync(CartViewModel cartViewModel, string token)
+        public async Task<CartViewModel?> UpdateCartAsync(CartViewModel cartViewModel)
         {
             var client = httpClientFactory.CreateClient("Carts.API");
-
-            PutTokenInHeaderAuthorization(token, client);
 
             using (var response = await client.PutAsJsonAsync($"{API_ENDPOINT}/UpdateCart/", cartViewModel))
             {
@@ -78,11 +71,9 @@ namespace VirtualShop.Web.Services
             return this.cartViewModel;
         }
 
-        public async Task<bool> RemoveItemFromCartAsync(int cartId, string token)
+        public async Task<bool> RemoveItemFromCartAsync(int cartId)
         {
             var client = httpClientFactory.CreateClient("Carts.API");
-            
-            PutTokenInHeaderAuthorization(token, client);
 
             using (var response = await client.DeleteAsync($"{API_ENDPOINT}/DeleteCart/" + cartId))
             {
@@ -92,27 +83,22 @@ namespace VirtualShop.Web.Services
             return false;
         }
 
-        private static void PutTokenInHeaderAuthorization(string token, HttpClient client)
-        {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        }
-
-        public Task<bool> ClearCartAsync(string userId, string token)
+        public Task<bool> ClearCartAsync(string userId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ApplyCouponAsync(CartViewModel cartViewModel, string couponCode, string token)
+        public Task<bool> ApplyCouponAsync(CartViewModel cartViewModel, string couponCode)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> RemoveCouponAsync(string userId, string token)
+        public Task<bool> RemoveCouponAsync(string userId)
         {
             throw new NotImplementedException();
         }
         
-        public Task<CartViewModel?> CheckoutAsync(CartHeaderViewModel cartHeaderViewModel, string token)
+        public Task<CartViewModel?> CheckoutAsync(CartHeaderViewModel cartHeaderViewModel)
         {
             throw new NotImplementedException();
         }

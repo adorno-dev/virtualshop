@@ -17,7 +17,7 @@ namespace VirtualShop.Web.Controllers
 
         private async Task<CartViewModel?> GetCartByUser()
         {
-            var cart = await cartService.GetCartByUserIdAsync(GetUserId(), await GetAccessToken());
+            var cart = await cartService.GetCartByUserIdAsync(GetUserId());
 
             if (cart?.CartHeader is not null) {
                 foreach (var item in cart.CartItems)
@@ -51,7 +51,7 @@ namespace VirtualShop.Web.Controllers
         [Authorize]
         public async Task<IActionResult> RemoveItem(int id)
         {
-            var result = await cartService.RemoveItemFromCartAsync(id, await GetAccessToken());
+            var result = await cartService.RemoveItemFromCartAsync(id);
 
             return result ?
                 RedirectToAction(nameof(Index)):

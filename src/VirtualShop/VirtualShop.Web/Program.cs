@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using VirtualShop.Web.Handlers;
 using VirtualShop.Web.Services;
 using VirtualShop.Web.Services.Contracts;
 
@@ -12,6 +13,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<IProductService, ProductService>("Products.API", c => {
     c.BaseAddress = new Uri(builder.Configuration.GetSection("ServiceUri:Products.API").Value);
 })
+.AddHttpMessageHandler<TokenHandler>()
 // Bypass SSL validation on Linux (Development only!)
 .ConfigurePrimaryHttpMessageHandler(() => {
     var handler = new HttpClientHandler();
@@ -24,13 +26,16 @@ builder.Services.AddHttpClient<ICartService, CartService>("Carts.API", c => {
     c.BaseAddress = new Uri(builder.Configuration.GetSection("ServiceUri:Carts.API").Value);
 })
 // Bypass SSL validation on Linux (Development only!)
-.ConfigurePrimaryHttpMessageHandler(() => {
+.ConfigurePrimaryHttpMessageHandler((x) => {
+    // var s = x.GetRequiredService<IHttpContextAccessor>();
     var handler = new HttpClientHandler();
     if (builder.Environment.IsDevelopment())
         handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
     return handler;
 });
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<TokenHandler>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
@@ -90,7 +95,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.UseAuthentication();

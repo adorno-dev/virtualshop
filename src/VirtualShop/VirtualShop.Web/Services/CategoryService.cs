@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using System.Text.Json;
 using VirtualShop.Web.Models;
 using VirtualShop.Web.Services.Contracts;
@@ -18,10 +17,10 @@ namespace VirtualShop.Web.Services
             this.httpClientFactory = httpClientFactory;
         }
 
-        public async Task<IEnumerable<CategoryViewModel>?> GetAllCategories(string token)
+        public async Task<IEnumerable<CategoryViewModel>?> GetAllCategories()
         {
             using var client = httpClientFactory.CreateClient("Products.API");
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             using (var response = await client.GetAsync(API_ENDPOINT))
             {
                 if (response.IsSuccessStatusCode)

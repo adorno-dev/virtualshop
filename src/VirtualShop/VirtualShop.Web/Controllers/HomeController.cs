@@ -22,7 +22,7 @@ namespace VirtualShop.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = await productService.GetAllProducts(string.Empty);
+            var products = await productService.GetAllProducts();
 
             return products is null ?
                 View("Error") :
@@ -38,7 +38,7 @@ namespace VirtualShop.Web.Controllers
             if (token is null)
                 return BadRequest("Invalid token.");
 
-            var product = await productService.FindProductById(id, token);
+            var product = await productService.FindProductById(id);
 
             return product is null ?
                 View("Error") :
@@ -58,7 +58,7 @@ namespace VirtualShop.Web.Controllers
             var cart = new CartViewModel { CartHeader = new () { UserId = User.Claims.First(w => w.Type.Equals("sub")).Value } };
 
             var cartItem = new CartItemViewModel {
-                Product = await productService.FindProductById(productViewModel.Id, token),
+                Product = await productService.FindProductById(productViewModel.Id),
                 ProductId = productViewModel.Id,
                 Quantity = productViewModel.Quantity
             };
@@ -67,7 +67,7 @@ namespace VirtualShop.Web.Controllers
             cartItemsViewModel.Add(cartItem);
             cart.CartItems = cartItemsViewModel;
 
-            var cartViewModel = await cartService.AddItemToCartAsync(cart, token);
+            var cartViewModel = await cartService.AddItemToCartAsync(cart);
 
             return cartViewModel is null ?
                 View(cartViewModel):
@@ -78,6 +78,7 @@ namespace VirtualShop.Web.Controllers
         public async Task<IActionResult> Login()
         {
             var token = await HttpContext.GetTokenAsync("access_token");
+
             return RedirectToAction(nameof(Index));
         }
 
