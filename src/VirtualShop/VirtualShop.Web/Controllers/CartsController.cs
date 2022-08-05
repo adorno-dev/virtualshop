@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtualShop.Web.Models;
@@ -10,8 +9,6 @@ namespace VirtualShop.Web.Controllers
     public class CartsController : Controller
     {
         private readonly ICartService cartService;
-
-        private async Task<string> GetAccessToken() => await HttpContext.GetTokenAsync("access_token") ?? "";
 
         private string GetUserId() => User.Claims.First(w => w.Type.Equals("sub")).Value;
 

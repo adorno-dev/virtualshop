@@ -12,6 +12,7 @@ namespace VirtualShop.Web.Controllers
         private readonly ILogger<HomeController> logger;
         private readonly IProductService productService;
         private readonly ICartService cartService;
+        private string GetUserId() => User.Claims.First(w => w.Type.Equals("sub")).Value;
 
         public HomeController(ILogger<HomeController> logger, IProductService productService, ICartService cartService)
         {
@@ -33,11 +34,6 @@ namespace VirtualShop.Web.Controllers
         [Authorize]
         public async Task<ActionResult<ProductViewModel>> ProductDetails(int id)
         {
-            var token = await HttpContext.GetTokenAsync("access_token");
-
-            if (token is null)
-                return BadRequest("Invalid token.");
-
             var product = await productService.FindProductById(id);
 
             return product is null ?
@@ -50,12 +46,7 @@ namespace VirtualShop.Web.Controllers
         [Authorize]
         public async Task<ActionResult<ProductViewModel>> ProductDetailsPost(ProductViewModel productViewModel)
         {
-            var token = await HttpContext.GetTokenAsync("access_token");
-
-            if (token is null)
-                return BadRequest("Invalid token.");
-
-            var cart = new CartViewModel { CartHeader = new () { UserId = User.Claims.First(w => w.Type.Equals("sub")).Value } };
+            var cart = new CartViewModel { CartHeader = new () { UserId = GetUserId() } };
 
             var cartItem = new CartItemViewModel {
                 Product = await productService.FindProductById(productViewModel.Id),
