@@ -13,7 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{95
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualShop.IdentityServer", "VirtualShop.IdentityServer/VirtualShop.IdentityServer.csproj", "{97FFE432-6F7A-4EDB-A561-3977C5293F97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualShop.Carts.API", "VirtualShop.Carts.API/VirtualShop.Carts.API.csproj", "{85667A9F-564E-4664-9406-E1C48E9EC088}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualShop.Carts.API", "VirtualShop.Carts.API/VirtualShop.Carts.API.csproj", "{85667A9F-564E-4664-9406-E1C48E9EC088}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualShop.Discount.API", "VirtualShop.Discount.API/VirtualShop.Discount.API.csproj", "{200D7FE2-0EEC-42E3-A7CF-911795D62278}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{85667A9F-564E-4664-9406-E1C48E9EC088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85667A9F-564E-4664-9406-E1C48E9EC088}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85667A9F-564E-4664-9406-E1C48E9EC088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{200D7FE2-0EEC-42E3-A7CF-911795D62278}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{200D7FE2-0EEC-42E3-A7CF-911795D62278}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{200D7FE2-0EEC-42E3-A7CF-911795D62278}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{200D7FE2-0EEC-42E3-A7CF-911795D62278}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{41A806D5-B6F3-4F66-9091-EEA54F407B70} = {956DC202-E3A5-41A3-8229-0C742B13658A}
 		{97FFE432-6F7A-4EDB-A561-3977C5293F97} = {C9CA2B7B-614A-4F9C-A9FA-7B3B585FE125}
 		{85667A9F-564E-4664-9406-E1C48E9EC088} = {C9CA2B7B-614A-4F9C-A9FA-7B3B585FE125}
+		{200D7FE2-0EEC-42E3-A7CF-911795D62278} = {C9CA2B7B-614A-4F9C-A9FA-7B3B585FE125}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8B39FCFB-4138-47D3-8C47-695FD7A50521}
