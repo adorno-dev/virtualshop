@@ -141,16 +141,34 @@ namespace VirtualShop.Carts.API.Repositories
 
         public async Task<bool> ApplyCouponAsync(string userId, string couponCode)
         {
-            await Task.CompletedTask;
+            var cartHeaderApplyCoupon = await context.CartHeaders.FirstOrDefaultAsync(c => c.UserId.Equals(userId));
 
-            return false;
+            if (cartHeaderApplyCoupon is null)
+                return false;
+            
+            cartHeaderApplyCoupon.CouponCode = couponCode;
+
+            context.CartHeaders.Update(cartHeaderApplyCoupon);
+
+            await context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<bool> DeleteCouponAsync(string userId)
         {
-            await Task.CompletedTask;
+            var cartHeaderApplyCoupon = await context.CartHeaders.FirstOrDefaultAsync(c => c.UserId.Equals(userId));
 
-            return false;
+            if (cartHeaderApplyCoupon is null)
+                return false;
+            
+            cartHeaderApplyCoupon.CouponCode = string.Empty;
+
+            context.CartHeaders.Update(cartHeaderApplyCoupon);
+
+            await context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

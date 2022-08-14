@@ -47,5 +47,25 @@ namespace VirtualShop.Carts.API.Controllers
                 Ok(true):
                 BadRequest(false);
         }
+
+        [HttpPost("ApplyCoupon")]
+        public async Task<ActionResult<CartDTO>> ApplyCoupon(CartDTO cartDTO)
+        {
+            var result = await repository.ApplyCouponAsync(cartDTO.CartHeader.UserId, cartDTO.CartHeader.CouponCode);
+
+            return result ?
+                Ok(result):
+                NotFound($"CartHeader not found for User ID = {cartDTO.CartHeader.UserId}");
+        }
+
+        [HttpDelete("DeleteCoupon/{userId}")]
+        public async Task<ActionResult<CartDTO>> DeleteCoupon(string userId)
+        {
+            var result = await repository.DeleteCouponAsync(userId);
+
+            return result ?
+                Ok(result):
+                NotFound($"Discount coupon not found for User ID = {userId}");
+        }
     }
 }

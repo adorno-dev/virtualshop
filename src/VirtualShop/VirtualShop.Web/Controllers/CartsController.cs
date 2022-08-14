@@ -9,6 +9,7 @@ namespace VirtualShop.Web.Controllers
     public class CartsController : Controller
     {
         private readonly ICartService cartService;
+        private readonly ICouponService couponService;
 
         private string GetUserId() => User.Claims.First(w => w.Type.Equals("sub")).Value;
 
@@ -17,17 +18,27 @@ namespace VirtualShop.Web.Controllers
             var cart = await cartService.GetCartByUserIdAsync(GetUserId());
 
             if (cart?.CartHeader is not null) {
+
+                if (!string.IsNullOrEmpty(cart.CartHeader.CouponCode)) {
+                    var coupon = await couponService.GetDiscountCoupon(cart.CartHeader.CouponCode);
+                    if (coupon?.CouponCode is not null)
+                        cart.CartHeader.Discount = coupon.Discount;
+                }
+
                 foreach (var item in cart.CartItems)
                     if (item.Product is not null)
                         cart.CartHeader.TotalAmount += (item.Product.Price * item.Quantity);
+                
+                cart.CartHeader.TotalAmount = cart.CartHeader.TotalAmount - (cart.CartHeader.TotalAmount * cart.CartHeader.Discount) / 100;
             }
 
             return cart;
         }
 
-        public CartsController(ICartService cartService)
+        public CartsController(ICartService cartService, ICouponService couponService)
         {
             this.cartService = cartService;
+            this.couponService = couponService;
         }
 
         [HttpGet]
@@ -53,6 +64,31 @@ namespace VirtualShop.Web.Controllers
             return result ?
                 RedirectToAction(nameof(Index)):
                 View(id);
+        }
+
+        [HttpPost("ApplyCoupon")]
+        public async Task<IActionResult> ApplyCoupon(CartViewModel cartViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await cartService.ApplyCouponAsync(cartViewModel);
+
+                if (result)
+                    return RedirectToAction(nameof(Index));
+            }
+
+            return View();
+        }
+
+        [HttpPost("DeleteCoupon")]
+        public async Task<IActionResult> DeleteCoupon()
+        {
+            var result = await cartService.RemoveCouponAsync(GetUserId());
+
+            if (result)
+                return RedirectToAction(nameof(Index));
+            
+            return View();
         }
     }
 }

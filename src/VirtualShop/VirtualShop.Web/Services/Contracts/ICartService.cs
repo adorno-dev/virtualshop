@@ -9,7 +9,7 @@ namespace VirtualShop.Web.Services.Contracts
         Task<CartViewModel?> UpdateCartAsync(CartViewModel cartViewModel);
         Task<bool> RemoveItemFromCartAsync(int cartId);
 
-        Task<bool> ApplyCouponAsync(CartViewModel cartViewModel, string couponCode);
+        Task<bool> ApplyCouponAsync(CartViewModel cartViewModel);
         Task<bool> RemoveCouponAsync(string userId);
         Task<bool> ClearCartAsync(string userId);
 

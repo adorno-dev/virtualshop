@@ -83,22 +83,38 @@ namespace VirtualShop.Web.Services
             return false;
         }
 
-        public Task<bool> ClearCartAsync(string userId)
+        public async Task<bool> ClearCartAsync(string userId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ApplyCouponAsync(CartViewModel cartViewModel, string couponCode)
+        public async Task<bool> ApplyCouponAsync(CartViewModel cartViewModel)
         {
-            throw new NotImplementedException();
+            var client = httpClientFactory.CreateClient("Carts.API");
+
+            var content = new StringContent(JsonSerializer.Serialize(cartViewModel), Encoding.UTF8, "application/json");
+
+            using (var response = await client.PostAsync($"{API_ENDPOINT}/ApplyCoupon/", content))
+            {
+                if (response.IsSuccessStatusCode)
+                    return true;
+            }
+            return false;
         }
 
-        public Task<bool> RemoveCouponAsync(string userId)
+        public async Task<bool> RemoveCouponAsync(string userId)
         {
-            throw new NotImplementedException();
+            var client = httpClientFactory.CreateClient("Carts.API");
+
+            using (var response = await client.DeleteAsync($"{API_ENDPOINT}/DeleteCoupon/{userId}"))
+            {
+                if (response.IsSuccessStatusCode)
+                    return true;
+            }
+            return false;
         }
         
-        public Task<CartViewModel?> CheckoutAsync(CartHeaderViewModel cartHeaderViewModel)
+        public async Task<CartViewModel?> CheckoutAsync(CartHeaderViewModel cartHeaderViewModel)
         {
             throw new NotImplementedException();
         }

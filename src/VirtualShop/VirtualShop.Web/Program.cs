@@ -25,6 +25,20 @@ builder.Services.AddHttpClient<IProductService, ProductService>("Products.API", 
 builder.Services.AddHttpClient<ICartService, CartService>("Carts.API", c => {
     c.BaseAddress = new Uri(builder.Configuration.GetSection("ServiceUri:Carts.API").Value);
 })
+.AddHttpMessageHandler<TokenHandler>()
+// Bypass SSL validation on Linux (Development only!)
+.ConfigurePrimaryHttpMessageHandler((x) => {
+    // var s = x.GetRequiredService<IHttpContextAccessor>();
+    var handler = new HttpClientHandler();
+    if (builder.Environment.IsDevelopment())
+        handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+    return handler;
+});
+
+builder.Services.AddHttpClient<ICartService, CartService>("Discount.API", c => {
+    c.BaseAddress = new Uri(builder.Configuration.GetSection("ServiceUri:Discount.API").Value);
+})
+.AddHttpMessageHandler<TokenHandler>()
 // Bypass SSL validation on Linux (Development only!)
 .ConfigurePrimaryHttpMessageHandler((x) => {
     // var s = x.GetRequiredService<IHttpContextAccessor>();
@@ -39,6 +53,7 @@ builder.Services.AddScoped<TokenHandler>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
 
 builder.Services
        .AddAuthentication(options => {
