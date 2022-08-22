@@ -1,6 +1,6 @@
 @model CartViewModel
 
-@if (Model.CartHeader is not null && Model.CartItems.Count() > 0)
+@if (Model.CartHeader is not null && Model.CartItems?.Count() > 0)
 {
     <form method="post">
         <br/>

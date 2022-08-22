@@ -11,6 +11,7 @@ namespace VirtualShop.Web.Services
         private readonly IHttpClientFactory httpClientFactory;
         private readonly JsonSerializerOptions? jsonSerializerOptions;
         private CartViewModel? cartViewModel = null;
+        private CartHeaderViewModel? cartHeaderViewModel = null;
 
         public CartService(IHttpClientFactory clientFactory)
         {
@@ -85,6 +86,8 @@ namespace VirtualShop.Web.Services
 
         public async Task<bool> ClearCartAsync(string userId)
         {
+            await Task.CompletedTask;
+
             throw new NotImplementedException();
         }
 
@@ -114,9 +117,23 @@ namespace VirtualShop.Web.Services
             return false;
         }
         
-        public async Task<CartViewModel?> CheckoutAsync(CartHeaderViewModel cartHeaderViewModel)
+        public async Task<CartHeaderViewModel?> CheckoutAsync(CartHeaderViewModel cartHeaderViewModel)
         {
-            throw new NotImplementedException();
+            var client = httpClientFactory.CreateClient("Carts.API");
+
+            var content = new StringContent(JsonSerializer.Serialize(cartHeaderViewModel), Encoding.UTF8, "application/json");
+
+            using (var response = await client.PostAsync($"{API_ENDPOINT}/Checkout/", content))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = await response.Content.ReadAsStreamAsync();
+                    this.cartHeaderViewModel = await JsonSerializer.DeserializeAsync<CartHeaderViewModel>(apiResponse, jsonSerializerOptions);
+                }
+                else
+                    return null;
+            }
+            return this.cartHeaderViewModel;
         }
     }
 }

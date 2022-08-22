@@ -13,6 +13,6 @@ namespace VirtualShop.Web.Services.Contracts
         Task<bool> RemoveCouponAsync(string userId);
         Task<bool> ClearCartAsync(string userId);
 
-        Task<CartViewModel?> CheckoutAsync(CartHeaderViewModel cartHeaderViewModel);
+        Task<CartHeaderViewModel?> CheckoutAsync(CartHeaderViewModel cartHeaderViewModel);
     }
 }

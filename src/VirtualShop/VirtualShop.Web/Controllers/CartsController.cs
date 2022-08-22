@@ -25,11 +25,14 @@ namespace VirtualShop.Web.Controllers
                         cart.CartHeader.Discount = coupon.Discount;
                 }
 
-                foreach (var item in cart.CartItems)
-                    if (item.Product is not null)
-                        cart.CartHeader.TotalAmount += (item.Product.Price * item.Quantity);
+                if (cart?.CartItems is not null) {
+                    foreach (var item in cart.CartItems)
+                        if (item.Product is not null)
+                            cart.CartHeader.TotalAmount += (item.Product.Price * item.Quantity);
+                }
                 
-                cart.CartHeader.TotalAmount = cart.CartHeader.TotalAmount - (cart.CartHeader.TotalAmount * cart.CartHeader.Discount) / 100;
+                if (cart is not null)
+                    cart.CartHeader.TotalAmount = cart.CartHeader.TotalAmount - (cart.CartHeader.TotalAmount * cart.CartHeader.Discount) / 100;
             }
 
             return cart;
@@ -88,6 +91,38 @@ namespace VirtualShop.Web.Controllers
             if (result)
                 return RedirectToAction(nameof(Index));
             
+            return View();
+        }
+
+        [HttpGet("Checkout")]
+        public async Task<IActionResult> Checkout()
+        {
+            var cartViewModel = await GetCartByUser();
+
+            return View(cartViewModel);
+        }
+
+
+
+        [HttpPost("Checkout")]
+        public async Task<IActionResult> Checkout(CartViewModel cartViewModel)
+        {
+            if (ModelState.IsValid)            
+            {
+                var result = await cartService.CheckoutAsync(cartViewModel.CartHeader);
+
+                if (result is not null)
+                return RedirectToAction(nameof(CheckoutCompleted));
+            }
+
+            return View(cartViewModel);
+        }
+
+        [HttpGet("CheckoutCompleted")]
+        public async Task<IActionResult> CheckoutCompleted()
+        {
+            await Task.CompletedTask;
+
             return View();
         }
     }

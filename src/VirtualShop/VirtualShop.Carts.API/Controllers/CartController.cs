@@ -67,5 +67,19 @@ namespace VirtualShop.Carts.API.Controllers
                 Ok(result):
                 NotFound($"Discount coupon not found for User ID = {userId}");
         }
+
+        [HttpPost("Checkout")]
+        public async Task<ActionResult<CheckoutHeaderDTO>> Checkout(CheckoutHeaderDTO checkoutHeaderDTO)
+        {
+            var cart = await repository.GetCartByUserIdAsync(checkoutHeaderDTO.UserId);
+
+            if (cart is null)
+                return NotFound($"Cart not found for {checkoutHeaderDTO.UserId}");
+            
+            checkoutHeaderDTO.DateTime = DateTime.Now;
+            checkoutHeaderDTO.CartItems = cart.CartItems;
+            
+            return Ok(checkoutHeaderDTO);
+        }
     }
 }
